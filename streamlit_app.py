@@ -211,48 +211,50 @@ def sentiment_badge(label: str) -> str:
 
 
 def tweet_card(text: str, sentiment: str, confidence: float, scores: dict) -> str:
-    badge = sentiment_badge(sentiment)
+    colors = {
+        "Positive": ("#00BA7C", "#0D2B21", "↑"),
+        "Negative": ("#F4212E", "#2B0D10", "↓"),
+        "Neutral":  ("#1D9BF0", "#0D1E2B", "→"),
+    }
+    c, bg, icon = colors.get(sentiment, ("#8899A6", "#1E2D3D", "•"))
+    badge = (
+        f'<span style="display:inline-flex;align-items:center;gap:6px;'
+        f'background:{bg};color:{c};border:1.5px solid {c}40;border-radius:9999px;'
+        f'padding:5px 14px;font-weight:700;font-size:14px;letter-spacing:0.3px;">'
+        f'{icon} {sentiment}</span>'
+    )
     bar_colors = {"Positive": "#00BA7C", "Negative": "#F4212E", "Neutral": "#1D9BF0"}
 
     bars = ""
     for s, p in scores.items():
         pct = round(p * 100, 1)
-        bars += f"""
-        <div style="margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-            <span style="font-size:12px;color:#8899A6;font-weight:600;">{s.upper()}</span>
-            <span style="font-size:12px;color:#E7E9EA;font-weight:700;">{pct}%</span>
-          </div>
-          <div style="background:#253341;border-radius:9999px;height:6px;overflow:hidden;">
-            <div style="height:100%;width:{pct}%;background:{bar_colors.get(s,'#8899A6')};
-                        border-radius:9999px;transition:width 0.6s ease;"></div>
-          </div>
-        </div>"""
+        bar_color = bar_colors.get(s, '#8899A6')
+        bars += (
+            f'<div style="margin-bottom:8px;">'
+            f'<div style="display:flex;justify-content:space-between;margin-bottom:4px;">'
+            f'<span style="font-size:12px;color:#8899A6;font-weight:600;">{s.upper()}</span>'
+            f'<span style="font-size:12px;color:#E7E9EA;font-weight:700;">{pct}%</span>'
+            f'</div>'
+            f'<div style="background:#253341;border-radius:9999px;height:6px;overflow:hidden;">'
+            f'<div style="height:100%;width:{pct}%;background:{bar_color};border-radius:9999px;"></div>'
+            f'</div>'
+            f'</div>'
+        )
 
-    return f"""
-    <div style="
-        background:#1E2D3D; border:1px solid rgba(255,255,255,0.08);
-        border-radius:16px; padding:20px 24px; margin:12px 0;
-    ">
-        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;">
-            <div style="width:40px;height:40px;background:#253341;border-radius:50%;
-                        display:flex;align-items:center;justify-content:center;
-                        font-size:18px;flex-shrink:0;">🐦</div>
-            <div style="flex:1;">
-                <p style="margin:0;font-size:15px;line-height:1.5;color:#E7E9EA;">
-                    {text[:280]}{"…" if len(text) > 280 else ""}
-                </p>
-            </div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;
-                    padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);">
-            <div>{badge}</div>
-            <span style="color:#8899A6;font-size:13px;">
-                Confidence: <b style="color:#E7E9EA;">{confidence*100:.1f}%</b>
-            </span>
-        </div>
-        <div style="margin-top:16px;">{bars}</div>
-    </div>"""
+    tweet_text = text[:280] + ("…" if len(text) > 280 else "")
+    return (
+        f'<div style="background:#1E2D3D;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px 24px;margin:12px 0;">'
+        f'<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;">'
+        f'<div style="width:40px;height:40px;background:#253341;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🐦</div>'
+        f'<div style="flex:1;"><p style="margin:0;font-size:15px;line-height:1.5;color:#E7E9EA;">{tweet_text}</p></div>'
+        f'</div>'
+        f'<div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);">'
+        f'<div>{badge}</div>'
+        f'<span style="color:#8899A6;font-size:13px;">Confidence: <b style="color:#E7E9EA;">{confidence*100:.1f}%</b></span>'
+        f'</div>'
+        f'<div style="margin-top:16px;">{bars}</div>'
+        f'</div>'
+    )
 
 
 def model_card(name: str, neg_recall: float, macro_f1: float, best: bool = False) -> str:
@@ -562,25 +564,6 @@ with tab1:
             height=140,
             label_visibility="collapsed",
         )
-
-        st.markdown('<p style="font-size:12px;color:#8899A6;margin:12px 0 6px;">Quick examples:</p>', unsafe_allow_html=True)
-        examples = [
-            "Love the new iPhone camera quality!",
-            "Apple's prices are getting ridiculous 😠",
-            "Google released Android 15 today",
-            "Not sure if the new Pixel is worth upgrading",
-        ]
-        cols = st.columns(2)
-        for i, ex in enumerate(examples):
-            with cols[i % 2]:
-                if st.button(f'"{ex[:28]}…"' if len(ex) > 28 else f'"{ex}"',
-                             key=f"ex_{i}", use_container_width=True):
-                    st.session_state["quick_tweet"] = ex
-                    st.rerun()
-
-        if "quick_tweet" in st.session_state:
-            tweet_input = st.session_state.pop("quick_tweet")
-            st.rerun()
 
         analyze_btn = st.button("Analyze Sentiment →", use_container_width=True, type="primary")
 
