@@ -102,6 +102,7 @@ h1, h2, h3, h4 {
     font-family: 'DM Sans', sans-serif !important;
     font-size: 15px !important;
     transition: border-color 0.2s;
+    caret-color: white !important;  /* ← add this line */
 }
 .stTextArea textarea:focus, .stTextInput input:focus {
     border-color: var(--blue) !important;
