@@ -30,6 +30,17 @@ Businesses that sell consumer tech products need real-time feedback loops. A sin
 
 ---
 
+
+## 🔗 Live Demos
+
+| | Tool | Link | Description |
+|-|------|------|-------------|
+| 🚀 | **Streamlit Dashboard** | [Open App](https://twitter-sentiment-analysis-for-tech-appuct-brands-lxvwhqzlkvom.streamlit.app/) | Interactive sentiment classifier — analyse single tweets, run batch predictions, and compare all 5 models live |
+| 📊 | **Tableau Story** | [View Story](#) | Visual narrative exploring sentiment trends, brand comparisons, and key dataset insights *(replace `#` with your Tableau Public URL)* |
+
+---
+
+
 ## Dataset
 
 Two datasets were merged and standardised into a unified 9-column schema:
@@ -120,15 +131,15 @@ All models evaluated on the same 20% stratified held-out test set:
 
 | Rank | Model | Neg Recall ↑ | Macro F1 ↑ | Task |
 |------|-------|-------------|-----------|------|
-| 🥇 1 | **Naive Bayes** | **0.8239** | 0.7269 | Binary |
-| 🥈 2 | **XGBoost** ⭐ | 0.7772 | **0.7445** | 3-class |
-| 3 | Logistic Regression | 0.7574 | 0.7056 | 3-class |
-| 4 | LightGBM | 0.7206 | 0.6981 | 3-class |
-| 5 | VADER (Baseline) | 0.3890 | 0.4812 | 3-class |
+| 🥇 1 | **Naive Bayes** | **0.835** | 0.743 | Binary |
+| 🥈 2 | **XGBoost** ⭐ | 0.804 | **0.7445** | 3-class |
+| 3 | Logistic Regression | 0.750 | 0.711 | 3-class |
+| 4 | LightGBM | 0.740 | 0.685 | 3-class |
+| 5 | VADER (Baseline) | 0.427 | 0.519 | 3-class |
 
 **⭐ Recommended production model: XGBoost**
 
-While Naive Bayes achieves the highest Negative Recall (0.82), it only handles binary classification (Positive vs Negative). XGBoost classifies all three sentiment classes while still exceeding the 0.70 Negative Recall target and delivering the best Macro F1 (0.74) of any model.
+While Naive Bayes achieves the highest Negative Recall (0.835), it only handles binary classification (Positive vs Negative). XGBoost classifies all three sentiment classes while still exceeding the 0.70 Negative Recall target .
 
 ---
 
@@ -221,26 +232,6 @@ streamlit run streamlit_app.py
 
 The dashboard will open at `http://localhost:8501`.
 
-### 3. Predict on New Tweets (Python API)
-
-```python
-import joblib
-from pathlib import Path
-
-tfidf = joblib.load("models/tfidf.pkl")
-model = joblib.load("models/xgb_model.pkl")
-le    = joblib.load("models/label_encoder.pkl")
-
-# Use the same preprocessing as training
-from streamlit_app import preprocess_tweet
-
-tweet = "Apple's new iPhone camera is absolutely incredible!"
-X     = tfidf.transform([preprocess_tweet(tweet)])
-label = le.inverse_transform(model.predict(X))[0]
-print(label)  # → "Positive"
-```
-
----
 
 ## Key Findings
 
