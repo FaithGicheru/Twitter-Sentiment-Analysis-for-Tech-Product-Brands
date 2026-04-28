@@ -132,7 +132,7 @@ All models evaluated on the same 20% stratified held-out test set:
 | Rank | Model | Neg Recall ↑ | Macro F1 ↑ | Task |
 |------|-------|-------------|-----------|------|
 | 1 | **Naive Bayes** | **0.835** | 0.743 | Binary |
-| 2 | **XGBoost** ⭐ | 0.804 | **0.7445** | 3-class |
+| 2 | **XGBoost** | 0.804 | **0.7445** | 3-class |
 | 3 | Logistic Regression | 0.750 | 0.711 | 3-class |
 | 4 | LightGBM | 0.740 | 0.685 | 3-class |
 | 5 | VADER (Baseline) | 0.427 | 0.519 | 3-class |
