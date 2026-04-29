@@ -36,7 +36,7 @@ Businesses that sell consumer tech products need real-time feedback loops. A sin
 | Tool | Link | Description |
 |------|------|-------------|
 | **Streamlit Dashboard** | [Open App](https://twitter-sentiment-analysis-for-tech-appuct-brands-lxvwhqzlkvom.streamlit.app/) | Interactive sentiment classifier — analyse single tweets, run batch predictions, and compare all 5 models live |
-| **Tableau Story** | [View Story](https://public.tableau.com/app/profile/faith.ng.endo/viz/Twittersentimentanalysis_17772943375520/Dashboard1) | Visual narrative exploring sentiment trends, brand comparisons, and key dataset insights |
+| **Tableau Story** | [View Story](https://public.tableau.com/app/profile/faith.ng.endo/viz/Twittersentimentanalysis_17772943375520/Story1) | Visual narrative exploring sentiment trends, brand comparisons, and key dataset insights |
 
 ---
 
